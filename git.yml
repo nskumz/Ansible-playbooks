@@ -1,0 +1,12 @@
+- name: update n1 server
+  hosts: n1
+  become: yes
+
+  tasks:
+    - name: install git
+      yum:
+        name: git
+        state: present
+
+    
+

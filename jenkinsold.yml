@@ -1,0 +1,35 @@
+---
+
+- hosts: n1
+  tasks:
+    - name: install java
+      yum:
+       name: java-1.8.0*
+       state: present
+    - name: add epel-release repo
+      yum:
+       name: epel-release
+       state: present
+    - name: Ensure Jenkins Repository is Installed
+      yum_repository:
+        name: jenkins
+        state: present
+        description: Official Jenkins Yum Repo
+        baseurl: http://pkg.jenkins.io/redhat
+        gpgkey: https://jenkins-ci.org/redhat/jenkins-ci.org.key
+        gpgcheck: yes
+        enabled: yes
+    - name: Import jenkins key from url
+      ansible.builtin.rpm_key:
+        state: present
+        key: https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+    - name: Ensure Jenkins is Installed
+      yum :
+        name: jenkins
+        update_cache: yes
+        state: present
+    - name: Start and enable Jenkins Service
+      systemd:
+        name: jenkins
+        state: started
+        enabled: true
